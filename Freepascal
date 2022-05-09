@@ -1,0 +1,100 @@
+program responsiT;
+Uses crt, Wincrt;
+
+Var 
+    x: array [1..100] of integer;
+    n, i, in_tmp: integer;
+
+procedure cariMinMax(var x: array of integer; indicatorMaxMin : boolean);
+    var
+        i, max, min : integer;
+    begin
+        max := x[1];
+        min := x[1];
+
+        for i := 0  to n-1 do begin
+            if x[i] > max then max := x[i];
+            if x[i] < min then min := x[i];
+        end;
+
+        if indicatorMaxMin then writeln('Nilai maksimumnya adalah ', max) else writeln('Nilai minimumnya adalah ', min);
+    end;
+
+function cariRerata(var x: array of integer) : real;
+    var
+        tmp : integer;
+        tot : real;
+    begin
+        tot := 0;
+
+        for tmp in x do begin
+            tot += tmp; 
+        end;
+
+        cariRerata := tot/n;
+    end;
+
+procedure cariStdev(var x: array of integer);
+    var
+        i : integer;
+        sdt, sd, rerata : real;
+    begin
+        rerata := cariRerata(x);
+        sdt := 0;
+
+        For i := 0 to n-1 do Begin
+            sdt += sqr(x[i]-rerata);
+        End;
+
+        sd:=sqrt(sdt/(n-1));
+
+        writeln('Nilai standar deviasinya adalah ', sd:0:2);
+    end;
+
+Begin
+    clrscr;
+    Writeln('Program Array');
+    Writeln('=============');
+    Writeln;
+    
+    Write('Masukkan Jumlah Data: ');
+    readln(n);
+    Writeln;
+    
+    For i:= 1 to n do Readln(x[i]);
+    
+    Writeln;
+    Write('Data Yang Telah Dimasukkan: ');
+    
+    For i:= 1 to n do Write(x[i],' ');
+
+    Writeln;
+
+    writeln('Menu');
+    writeln('1. Nilai Maksimal');
+    writeln('2. Nilai Minimal');
+    writeln('3. Nilai Rata-Rata');
+    writeln('4. Standar Deviasi');
+    writeln('5. Keluar');
+    write('Masukkan menu: ');
+    readln(in_tmp);
+
+    case in_tmp of 
+        1 : begin
+                cariMinMax(x, true);
+            end;
+        2 : begin
+                cariMinMax(x, false);
+            end;
+        3 : begin
+                writeln('Nilai reratanya adalah ', cariRerata(x):0:2) ;
+            end;
+        4 : begin
+                cariStdev(x);
+            end;
+        5 : begin
+                exit();
+            end;
+        else writeln('Masukan anda salah');
+    end;
+End.
