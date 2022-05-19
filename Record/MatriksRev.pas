@@ -1,6 +1,6 @@
 program MatriksRev;
 
-uses crt;
+uses crt, sysutils;
 
 type
     pecahan = record
@@ -11,67 +11,109 @@ type
 var
     matriks : array2D;
     dum_Matriks : array2D;
+    hasil : pecahan;
     local_input, in_tmp, i, j: integer;
+    str : string;
 
-function mat_iput(str : string) : pecahan;
+procedure mat_input(str : string);
     var
-        idx, len : integer;
+        idx, len, i : integer;
         resultElement : pecahan;
-        tmp_result: TStringArray;
+        tmp_result: string;
 
     begin
+        tmp_result := '';
+        len := length(str);
         idx := pos('/', str);
         if(idx = 0) then begin
             resultElement.num := StrToInt(str);
             resultElement.denum := 1;
-        end else begin
-            tmp_result := str.split('/');
-            resultElement.num := StrToInt(tmp_result[1]);
-            resultElement.denum := StrToInt(tmp_result[2]);            
+            end
+        else begin
+            for i := 1 to idx-1 do begin
+                tmp_result += str[i];
+            end;
+            resultElement.num := StrToInt(tmp_result);
+            tmp_result := '';
+            
+
+            for i := idx + 1 to len do begin
+                tmp_result += str[i];
+            end;
+            
+            resultElement.denum := StrToInt(tmp_result);            
         end;
-        mat_input = resultElement;
+        
+        hasil := resultElement; 
     end;
+
 procedure print_matriks(var tmp_mat : array2D);
     var
         i, j : integer;
+        tmp_element : pecahan;
     begin
         for i := 0 to 2 do begin
             for j := 0 to 2 do begin
-                write(tmp_mat[i, j], ' ');
+                tmp_element := tmp_mat[i, j];
+
+                if (tmp_element.denum = 1) then 
+                    write(tmp_element.num, ' ')
+                else
+                    write(tmp_element.num, '/', tmp_element.denum, ' ');
             end;
             writeln();
         end;
     end;
 
-procedure print_matriksReal(var tmp_mat : array2DReal);
-    var
-        i, j : integer;
+function GCD(a, b : integer) : Integer;
     begin
-        for i := 0 to 2 do begin
-            for j := 0 to 2 do begin
-                write(tmp_mat[i,j]:5:2, ' ');
-            end;
-            writeln();
-        end;
+        if (b = 0) then GCD := a else GCD := GCD(b, a mod b);
+    end;
+
+procedure simplify(var frac : pecahan);
+    var
+        FPB : integer;
+    begin
+        FPB := GCD(frac.num, frac.denum);
+        frac.num := frac.num div FPB;
+        frac.denum := frac.denum div FPB;
+    end;
+
+procedure tambahPecahan(var a, b : pecahan);
+    var
+        hasil : pecahan;
+    begin
+        hasil.num := a.num * b.denum + a.denum * b.num;
+        hasil.denum := a.denum * b.denum;
+        simplify(hasil);
+
+        a := hasil;
     end;
 
 procedure kaliMatriks(var tmp_mat1, tmp_mat2 : array2D);
     var
         resultMat : array2D;
         i, j, k : integer;
-
+        opr1, opr2, hasil : pecahan;
     begin
 
         for i := 0 to 2 do begin
             for j := 0 to 2 do begin
-                resultMat [i,j] := 0;
+                resultMat[i, j].num := 0;
+                resultMat[i, j].denum := 1;
             end;
         end;
 
         for i := 0 to 2 do begin
             for j := 0 to 2 do begin
                 for k := 0 to 2 do begin
-                resultMat[i, j] += tmp_mat1[i, k] * tmp_mat2[k, j];
+                    opr1 := tmp_mat1[i, k];
+                    opr2 := tmp_mat2[k, j];
+                    hasil.num := opr1.num * opr2.num;
+                    hasil.denum := opr1.denum * opr2.denum;
+                    simplify(hasil);
+                    
+                    tambahPecahan(resultMat[i, j],  hasil);
                 end;
             end;
         end;
@@ -96,36 +138,43 @@ procedure kaliMatriks(var tmp_mat1, tmp_mat2 : array2D);
 //         for(int)
 //     end;
 
-function detMatriks(var tmp_mat : array2D) : real;
-    begin
-        detMatriks := tmp_mat[0,0] * (tmp_mat[2, 2] * tmp_mat[1, 1] - tmp_mat[2, 1] * tmp_mat[1, 2]);
-        detMatriks += tmp_mat[1,0] * (tmp_mat[0, 1] * tmp_mat[1, 2] - tmp_mat[1, 1] * tmp_mat[0, 2]);
-        detMatriks += tmp_mat[2,0] * (tmp_mat[0, 1] * tmp_mat[2, 2] - tmp_mat[2, 1] * tmp_mat[1, 2]);
-    end;
+// function detMatriks(var tmp_mat : array2D) : real;
+//     begin
+//         detMatriks := tmp_mat[0,0] * (tmp_mat[2, 2] * tmp_mat[1, 1] - tmp_mat[2, 1] * tmp_mat[1, 2]);
+//         detMatriks += tmp_mat[1,0] * (tmp_mat[0, 1] * tmp_mat[1, 2] - tmp_mat[1, 1] * tmp_mat[0, 2]);
+//         detMatriks += tmp_mat[2,0] * (tmp_mat[0, 1] * tmp_mat[2, 2] - tmp_mat[2, 1] * tmp_mat[1, 2]);
+//     end;
 
 procedure tpMatriks(var tmp_mat : array2D);
-    begin
-        tmp_mat[0,1] += tmp_mat[1,0];
-        tmp_mat[1,0] := tmp_mat[0,1] - tmp_mat[1,0];
-        tmp_mat[0,1] -= tmp_mat[1,0];
-    end;
-
-procedure invers_mat(var tmp_mat : array2D);
     var
-        resultMat : array2DReal;
-        determinan : real;
-    begin
-        determinan := detMatriks(tmp_mat);
-        if (determinan = 0) then writeln('Matriks ini invertible!') else begin
-            resultMat[0,0] := tmp_mat[1,1] / determinan;
-            resultMat[0,1] := -tmp_mat[1,0] / determinan;
-            resultMat[1,0] := -tmp_mat[0,1] / determinan;
-            resultMat[1,1] := tmp_mat[0,0] / determinan;
+        result_mat : array2D;
 
-            writeln('Hasil Matriks: ');
-            print_matriksReal(resultMat);
+    begin
+        for i := 0 to 2 do begin
+            for j := 0 to 2 do begin
+                result_mat[i, j] := tmp_mat[j, i];
+            end;
         end;
+
+        tmp_mat := result_mat;
     end;
+
+// procedure invers_mat(var tmp_mat : array2D);
+//     var
+//         resultMat : array2DReal;
+//         determinan : real;
+//     begin
+//         determinan := detMatriks(tmp_mat);
+//         if (determinan = 0) then writeln('Matriks ini invertible!') else begin
+//             resultMat[0,0] := tmp_mat[1,1] / determinan;
+//             resultMat[0,1] := -tmp_mat[1,0] / determinan;
+//             resultMat[1,0] := -tmp_mat[0,1] / determinan;
+//             resultMat[1,1] := tmp_mat[0,0] / determinan;
+
+//             writeln('Hasil Matriks: ');
+//             print_matriksReal(resultMat);
+//         end;
+//     end;
 
 begin
     clrscr;
@@ -136,9 +185,10 @@ begin
     
     for i := 0 to 2 do begin
         for j := 0 to 2 do begin
-            read(str);
-            
-            matriks[i, j] := mat_input(str);
+            write('Baris ', i + 1, ' kolom ', j + 1, ': ');
+            readln(str);
+            mat_input(str);
+            matriks[i, j] := hasil;
         end;
     end;
 
@@ -162,7 +212,10 @@ begin
                     writeln('Masukkan nilai matriks kedua (b) ');
                     for i := 0 to 2 do begin
                         for j := 0 to 2 do begin
-                            read(dum_matriks[i, j]);
+                            write('Baris ', i + 1, ' kolom ', j + 1, ': ');
+                            readln(str);
+                            mat_input(str);
+                            dum_matriks[i, j] := hasil;
                         end;
                     end;
 
@@ -177,16 +230,16 @@ begin
 
                     writeln;
                 end;
-            2 : begin
-                    clrscr;
-                    writeln('Determinan dari matriks ini adalah ', detMatriks(matriks):0:2);
-                end;
+            // 2 : begin
+            //         clrscr;
+            //         writeln('Determinan dari matriks ini adalah ', detMatriks(matriks):0:2);
+            //     end;
             3 : begin
                     tpMatriks(matriks);
                 end;
-            4 : begin
-                    invers_mat(matriks);
-                end;
+            // 4 : begin
+            //         invers_mat(matriks);
+            //     end;
             5 : begin
                     exit();
                 end;
