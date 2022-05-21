@@ -130,13 +130,7 @@ procedure kaliMatriks(var tmp_mat1, tmp_mat2 : array2D);
         print_matriks(resultMat);
     end;
 
-// procedure OBE(var tmp_mat : array2D);
-//     var
-//         i, j : integer;
-    
-//     begin
-//         for(int)
-//     end;
+
 
 // function detMatriks(var tmp_mat : array2D) : real;
 //     begin
