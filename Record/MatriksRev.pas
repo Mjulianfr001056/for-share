@@ -97,12 +97,12 @@ procedure kaliMatriks(var tmp_mat1, tmp_mat2 : array2D);
         opr1, opr2, hasil : pecahan;
     begin
 
-        for i := 0 to 2 do begin
-            for j := 0 to 2 do begin
-                resultMat[i, j].num := 0;
-                resultMat[i, j].denum := 1;
-            end;
-        end;
+        // for i := 0 to 2 do begin
+        //     for j := 0 to 2 do begin
+        //         resultMat[i, j].num := 0;
+        //         resultMat[i, j].denum := 1;
+        //     end;
+        // end;
 
         for i := 0 to 2 do begin
             for j := 0 to 2 do begin
