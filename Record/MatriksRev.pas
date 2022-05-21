@@ -138,12 +138,12 @@ procedure kaliMatriks(var tmp_mat1, tmp_mat2 : array2D);
 //         for(int)
 //     end;
 
-// function detMatriks(var tmp_mat : array2D) : real;
-//     begin
-//         detMatriks := tmp_mat[0,0] * (tmp_mat[2, 2] * tmp_mat[1, 1] - tmp_mat[2, 1] * tmp_mat[1, 2]);
-//         detMatriks += tmp_mat[1,0] * (tmp_mat[0, 1] * tmp_mat[1, 2] - tmp_mat[1, 1] * tmp_mat[0, 2]);
-//         detMatriks += tmp_mat[2,0] * (tmp_mat[0, 1] * tmp_mat[2, 2] - tmp_mat[2, 1] * tmp_mat[1, 2]);
-//     end;
+ function detMatriks(var tmp_mat : array2D) : real;
+     begin
+         detMatriks := tmp_mat[0,0] * (tmp_mat[2, 2] * tmp_mat[1, 1] - tmp_mat[2, 1] * tmp_mat[1, 2]);
+         detMatriks += tmp_mat[1,0] * (tmp_mat[0, 1] * tmp_mat[1, 2] - tmp_mat[1, 1] * tmp_mat[0, 2]);
+         detMatriks += tmp_mat[2,0] * (tmp_mat[0, 1] * tmp_mat[2, 2] - tmp_mat[2, 1] * tmp_mat[1, 2]);
+     end;
 
 procedure tpMatriks(var tmp_mat : array2D);
     var
