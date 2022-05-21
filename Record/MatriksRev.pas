@@ -172,7 +172,7 @@ procedure tpMatriks(var tmp_mat : array2D);
 
 begin
     clrscr;
-    Writeln('Selamat datang di aplikasi matriks sederhana 3x3');
+    Writeln('Selamat datang di aplikasi mobile matriks sederhana 3x3');
     Writeln('================================================');
     
     writeln('Masukkan nilai matriks');
