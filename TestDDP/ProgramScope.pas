@@ -19,10 +19,10 @@ procedure scope2(var x:integer; y:integer);
     end;
 procedure scope3(p: integer; var q:integer; r:integer);
 
-function scope4(z:integer) : integer;
-    begin
-    scope4 := z + 1;
-    end;
+    function scope4(z:integer) : integer;
+        begin
+        scope4 := z + 1;
+        end;
     begin
     p := scope4(p);
     end;
@@ -55,4 +55,5 @@ begin (* MAIN PROGRAM *)
 
     Writeln('G');
     scope5; (* G *)
+
 end.
