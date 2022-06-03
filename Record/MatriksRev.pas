@@ -79,16 +79,16 @@ procedure simplify(var frac : pecahan);
         frac.denum := frac.denum div FPB;
     end;
 
-procedure tambahPecahan(var a, b : pecahan);
-    var
-        hasil : pecahan;
-    begin
-        hasil.num := a.num * b.denum + a.denum * b.num;
-        hasil.denum := a.denum * b.denum;
-        simplify(hasil);
+// procedure tambahPecahan(var a, b : pecahan);
+//     var
+//         hasil : pecahan;
+//     begin
+//         hasil.num := a.num * b.denum + a.denum * b.num;
+//         hasil.denum := a.denum * b.denum;
+//         simplify(hasil);
 
-        a := hasil;
-    end;
+//         a := hasil;
+//     end;
 
 procedure kaliMatriks(var tmp_mat1, tmp_mat2 : array2D);
     var
